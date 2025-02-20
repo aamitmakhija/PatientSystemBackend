@@ -1,6 +1,6 @@
 name: CI/CD Pipeline
 
-on:  # ✅ Defines when the workflow should run
+on:
   push:
     branches:
       - main
@@ -11,6 +11,17 @@ on:  # ✅ Defines when the workflow should run
 jobs:
   build:
     runs-on: ubuntu-latest
+
+    services:
+      mongodb:
+        image: mongo:latest
+        ports:
+          - 27017:27017
+        options: >-
+          --health-cmd "mongosh --eval 'db.runCommand({ ping: 1 })'" 
+          --health-interval 10s 
+          --health-timeout 5s 
+          --health-retries 5
 
     steps:
       - name: Checkout repository
@@ -26,6 +37,8 @@ jobs:
         run: npm install
 
       - name: Run tests (if available)
+        env:
+          MONGO_URI: mongodb://localhost:27017/testdb
         run: npm test || echo "No tests found"
 
       - name: Lint code (if available)
