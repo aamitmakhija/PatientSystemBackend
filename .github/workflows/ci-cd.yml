@@ -1,4 +1,4 @@
-name: CI/CD Pipeline
+name: CI/CD Pipeline with Docker
 
 on:
   push:
@@ -43,3 +43,11 @@ jobs:
 
       - name: Lint code (if available)
         run: npm run lint || echo "No linting configured"
+
+      - name: Log in to Docker Hub
+        run: echo "${{ secrets.DOCKER_PASSWORD }}" | docker login -u "${{ secrets.DOCKER_USERNAME }}" --password-stdin
+
+      - name: Build and Push Docker Image
+        run: |
+          docker build -t ${{ secrets.DOCKER_USERNAME }}/patientsystembackend:latest .
+          docker push ${{ secrets.DOCKER_USERNAME }}/patientsystembackend:latest
