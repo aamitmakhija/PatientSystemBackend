@@ -1,0 +1,36 @@
+[{
+  "_id": {
+    "$oid": "67b2fe4930f0b7749f3a15b3"
+  },
+  "name": "Tom Cruise",
+  "age": 62,
+  "gender": "Male",
+  "contact": "0558822587",
+  "symptoms": "Ecstatic",
+  "registrationType": "OPD",
+  "createdAt": {
+    "$date": "2025-02-17T09:15:53.049Z"
+  },
+  "updatedAt": {
+    "$date": "2025-02-17T09:15:53.049Z"
+  },
+  "__v": 0
+},
+{
+  "_id": {
+    "$oid": "67b2ffaa40b7ae7bb3867976"
+  },
+  "name": "Ellen Degeneres",
+  "age": 67,
+  "gender": "Female",
+  "contact": "05065445665",
+  "symptoms": "Short Temper",
+  "registrationType": "OPD",
+  "createdAt": {
+    "$date": "2025-02-17T09:21:46.491Z"
+  },
+  "updatedAt": {
+    "$date": "2025-02-17T09:21:46.491Z"
+  },
+  "__v": 0
+}]
