@@ -1,35 +1,52 @@
+const User = require('../models/User');
 const jwt = require('jsonwebtoken');
-const User = require('../models/User'); // User model for fetching user data
+const bcrypt = require('bcrypt');
 
-// Handle user login
 exports.login = async (req, res) => {
-    const { username, password } = req.body;
+    let { username, password } = req.body;
+    console.log('Received login request with username:', username);
+
+    // Trim the username and password to remove any extra spaces
+    username = username.trim();
+    password = password.trim();
+
+    // Ensure username and password are provided
+    if (!username || !password) {
+        return res.status(400).json({ message: 'Username and password are required' });
+    }
 
     try {
-        // Find user by username
-        const user = await User.findOne({ username });
+        // Case-insensitive query to find the user by username
+        const user = await User.findOne({
+            username: new RegExp('^' + username + '$', 'i'),  // Case-insensitive regex search
+        });
+
+        // Log if user is not found
         if (!user) {
-            return res.status(400).json({ message: 'Invalid username or password' });
+            console.log('User not found');
+            return res.status(400).json({ message: 'Authentication failed' });
         }
 
-        // Compare provided password with stored hash
-        const isPasswordValid = await user.comparePassword(password);
-        if (!isPasswordValid) {
-            return res.status(400).json({ message: 'Invalid username or password' });
+        // Verify the entered password matches the stored hash
+        const isMatch = await bcrypt.compare(password, user.password);
+        if (!isMatch) {
+            console.log('Password mismatch');
+            return res.status(400).json({ message: 'Authentication failed' });
         }
 
-        // Generate JWT with user details
+        // Generate JWT token with user details
         const token = jwt.sign(
-            { userId: user._id, role: user.role, name: user.name }, // Payload
-            process.env.JWT_SECRET, // Secret key
-            { expiresIn: '1h' } // Expiry
+            { userId: user._id, role: user.role },
+            process.env.JWT_SECRET,
+            { expiresIn: '1h' }
         );
 
-        // Send token as response
-        return res.json({ token });
-    } catch (error) {
-        // Catch any errors and send a 500 response
-        console.error(error);
-        return res.status(500).json({ message: 'Server error, please try again later' });
+        console.log('Login successful, sending token.');
+        
+        // Send the JWT token and success message as response
+        res.json({ message: 'Login successful', token });
+    } catch (err) {
+        console.error('Error during login:', err);
+        res.status(500).json({ message: 'Server error' });
     }
 };
