@@ -34,11 +34,11 @@ exports.login = async (req, res) => {
             return res.status(400).json({ message: 'Authentication failed' });
         }
 
-        // Generate JWT token with user details
+        // Generate JWT token with user details, including role
         const token = jwt.sign(
             { userId: user._id, role: user.role },
             process.env.JWT_SECRET,
-            { expiresIn: '1h' }
+            { expiresIn: '1h' }  // Token expires in 1 hour
         );
 
         console.log('Login successful, sending token.');

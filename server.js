@@ -5,6 +5,7 @@ const cors = require('cors'); // Importing CORS package
 const authRoutes = require('./authentication/auth.routes');
 const patientRoutes = require('./routes/patients');
 const protectedRoutes = require('./routes/protectedRoutes');
+const adminRoutes = require('./routes/admin');  // Import admin routes
 
 // Load environment variables
 dotenv.config();
@@ -64,6 +65,9 @@ try {
     app.use('/api/patients', patientRoutes);
     app.use('/api/protected', protectedRoutes); // Ensure this is required correctly
     
+    // Admin Routes
+    app.use('/api/admin', adminRoutes);  // Use admin routes
+
     // If you have the admissions route, ensure it's available
     // app.use('/api/admissions', require('./routes/admissions')); // Uncomment if you need this route
 } catch (err) {
