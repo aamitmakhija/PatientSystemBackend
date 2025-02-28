@@ -10,24 +10,19 @@ router.get('/', (req, res) => {
 });
 
 // Register a new patient (Only Clerks have access)
-router.post('/register', authenticateToken, authorizeRole('clerk'), async (req, res) => {
-    try {
-        const { name, age, gender, contact, symptoms } = req.body;
-
-        // Create a new patient entry
-        const patient = new Patient({ name, age, gender, contact, symptoms });
+router.post('/register', authenticateToken, authorizeRole(['clerk']), async (req, res) => {
+    try{
+        const{name, age, gender, contact, symptoms, registrationType}= req.body;
+        const patient= new Patient({name, age, gender, contact, symptoms, registrationType});
         await patient.save();
-
-        // Return success response with the new patient data
-        res.status(201).json({ message: 'Patient registered successfully', patient });
-    } catch (err) {
-        // Handle errors and send a bad request response
-        res.status(400).json({ message: err.message });
+        res.status(201).json({message:"Patient registered successfully!!", patient});
+    } catch(error){
+        res.status(500).json({message: "Patient registration unsuccessful :(", details: error.message});
     }
 });
 
 // Get patient details (Accessible by doctors, nurses, and admins)
-router.get('/:id', authenticateToken, authorizeRole(['doctor', 'nurse', 'admin']), async (req, res) => {
+router.get('/view/:id', authenticateToken, authorizeRole(['doctor', 'nurse', 'admin']), async (req, res) => {
     try {
         const patient = await Patient.findById(req.params.id);
         if (!patient) {
@@ -43,7 +38,7 @@ router.get('/:id', authenticateToken, authorizeRole(['doctor', 'nurse', 'admin']
 });
 
 // Update patient details (Accessible by doctors and nurses)
-router.put('/:id', authenticateToken, authorizeRole(['doctor', 'nurse']), async (req, res) => {
+router.put('/update/:id', authenticateToken, authorizeRole(['doctor', 'nurse']), async (req, res) => {
     try {
         const updatedPatient = await Patient.findByIdAndUpdate(req.params.id, req.body, { new: true });
         if (!updatedPatient) {
@@ -59,7 +54,7 @@ router.put('/:id', authenticateToken, authorizeRole(['doctor', 'nurse']), async 
 });
 
 // Delete patient record (Only doctors have access)
-router.delete('/:id', authenticateToken, authorizeRole('doctor'), async (req, res) => {
+router.delete('/delete/:id', authenticateToken, authorizeRole('doctor'), async (req, res) => {
     try {
         const patient = await Patient.findByIdAndDelete(req.params.id);
         if (!patient) {
