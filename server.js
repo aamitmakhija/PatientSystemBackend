@@ -6,7 +6,7 @@ const authRoutes = require('./authentication/auth.routes');
 const patientRoutes = require('./routes/patients');
 const protectedRoutes = require('./routes/protectedRoutes');
 const adminRoutes = require('./routes/admin');  // Import admin routes
-
+const admissionRoutes = require('./routes/admissions'); 
 // Load environment variables
 dotenv.config();
 console.log('Environment variables loaded...');
@@ -61,15 +61,14 @@ app.get('/', (req, res) => {
 console.log('Setting up routes...');
 try {
     // Authentication and Patient Routes
-    app.use('/api/auth', authRoutes);
-    app.use('/api/patients', patientRoutes);
+    app.use('/api/auth', authRoutes); //Authentication Routess
+    app.use('/api/patients', patientRoutes); //Patient Routes
     app.use('/api/protected', protectedRoutes); // Ensure this is required correctly
+    app.use('/api/admissions', admissionRoutes);  //Admission Routes
     
     // Admin Routes
-    app.use('/api/admin', adminRoutes);  // Use admin routes
+    app.use('/api/admin', adminRoutes);  // Use admin routes  
 
-    // If you have the admissions route, ensure it's available
-    // app.use('/api/admissions', require('./routes/admissions')); // Uncomment if you need this route
 } catch (err) {
     console.error('Error loading routes:', err.message);
 }

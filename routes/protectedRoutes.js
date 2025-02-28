@@ -4,7 +4,7 @@ const router = express.Router();
 
 // Dashboard route - accessible to authenticated users only
 router.get('/dashboard', authenticateToken, (req, res) => {
-    res.json({ message: `Welcome, your role is ${req.user.role}` });
+    res.json({ message: `Welcome ${req.user.name}, your role is ${req.user.role}` });
 });
 
 // Admin-only route
@@ -17,3 +17,4 @@ router.get('/admin', authenticateToken, (req, res) => {
 });
 
 module.exports = router;
+
