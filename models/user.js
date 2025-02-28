@@ -19,7 +19,7 @@ const UserSchema = new mongoose.Schema({
     },
     role: {
         type: String,
-        enum: ['admin', 'doctor', 'nurse', 'clerk'],
+        enum: ['admin', 'doctor', 'nurse', 'clerk', 'pathologist'],  // 5 user roles for hospital staff 
         required: true,
     }
 }, { timestamps: true });

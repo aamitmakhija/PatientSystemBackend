@@ -1,11 +1,10 @@
 const express = require('express');
 const User = require('../models/user');
 const authenticateToken = require('../middleware/authmiddleware');
-const authorizeRole = require('../middleware/authorizeRole'); // Admin role middleware
+const authorizeRole = require('../middleware/authorizeRole'); 
 
 const router = express.Router();
 
-// Route for creating a new user (only accessible by admin)
 router.post('/users', authenticateToken, authorizeRole(['admin']), async (req, res) => {
   const { username, name, password, role } = req.body;
 
@@ -29,7 +28,6 @@ router.post('/users', authenticateToken, authorizeRole(['admin']), async (req, r
   }
 });
 
-// Route for getting all users (only accessible by admin)
 router.get('/users', authenticateToken, authorizeRole(['admin']), async (req, res) => {
   try {
     const users = await User.find();
@@ -39,7 +37,6 @@ router.get('/users', authenticateToken, authorizeRole(['admin']), async (req, re
   }
 });
 
-// Route for updating an existing user (only accessible by admin)
 router.put('/users/:id', authenticateToken, authorizeRole(['admin']), async (req, res) => {
   const { id } = req.params;
   const { username, name, password, role } = req.body;
