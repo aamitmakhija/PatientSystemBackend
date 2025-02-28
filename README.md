@@ -49,7 +49,7 @@ API Endpoints
 
 1. User Authentication
 	•	POST /api/auth/login: Login route for authenticating users. Accepts username and password as the request body. Returns a JWT token for access.
-	•	GET /api/protected: Protected route that requires a valid JWT token to access. Only authorized users can access this.
+	•	GET /api/protected/dashboard: Protected route that requires a valid JWT token to access. Only authorized users can access this.
 
 2. Patient Management (Admin, Doctor, Nurse, Clerk)
 	•	POST /api/patients/register: Register a new patient. Only authorized roles can access this.
@@ -57,7 +57,11 @@ API Endpoints
 	•	GET /api/patients/view/:id: View details of a specific patient.
 	•	DELETE /api/patients/delete/:id: Delete a specific patient record.
 
-3. Admin Management (Admin only)
+3. Admissions Management (Doctor, Nurse, Clerk)
+	•	POST /api/admissions/admit: Register an existing patient to a new ward. Only doctors can access this.
+	•	GET /api/admissions/wards/:wardType/patients View the details of all patients admitted within the specific ward.
+
+4. Admin Management (Admin only)
 	•	POST /api/admin/createUser: Admins can create a new user (Doctor, Nurse, Clerk).
 	•	PUT /api/admin/updateUser/:id: Admins can update existing user roles.
 	•	DELETE /api/admin/deleteUser/:id: Admins can delete a user.
