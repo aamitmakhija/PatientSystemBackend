@@ -1,82 +1,51 @@
 const express = require('express');
 const dotenv = require('dotenv');
 const connectDB = require('./config/db');
-const cors = require('cors'); // Importing CORS package
-const authRoutes = require('./authentication/auth.routes');
-const patientRoutes = require('./routes/patients');
-const protectedRoutes = require('./routes/protectedRoutes');
-const adminRoutes = require('./routes/admin');  // Import admin routes
+const cors = require('cors');
 
-// Load environment variables
+const authenticateToken = require('./middleware/authmiddleware');
+const authorizeRole = require('./middleware/authorizeRole');
+
+// Import routes
+const adminRoutes = require('./routes/admin');
+const clerkRoutes = require('./routes/clerk');
+const patientRoutes = require('./routes/patient');
+const nurseRoutes = require('./routes/nurse');
+const pathologistRoutes = require('./routes/pathalogist'); // Corrected pathologist route import
+
 dotenv.config();
-console.log('Environment variables loaded...');
-console.log('MONGO_URI:', process.env.MONGO_URI);
-
-// Global error handlers
-process.on('uncaughtException', (err) => {
-    console.error('Uncaught Exception:', err.message);
-    console.error(err.stack);
-    process.exit(1);
-});
-
-process.on('unhandledRejection', (err) => {
-    console.error('Unhandled Rejection:', err.message);
-    console.error(err.stack);
-    process.exit(1);
-});
 
 const app = express();
 
-// Middleware to parse JSON requests
-app.use(express.json()); // No need for body-parser since express.json() is used
+// Middleware
+app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
-
-// CORS setup to allow all origins
 app.use(cors());
 
-// Middleware to log incoming requests and validate JSON body
+// Debug Logging for Incoming Requests
 app.use((req, res, next) => {
     console.log(`Incoming Request: ${req.method} ${req.url}`);
     console.log('Request Headers:', req.headers);
-
-    if (req.headers['content-type'] && !req.headers['content-type'].includes('application/json')) {
-        console.warn('Warning: Content-Type is not application/json');
-    }
-
-    console.log('Raw Request Body:', req.body);
-
-    if (!req.body || Object.keys(req.body).length === 0) {
-        console.warn('Warning: Request body is empty. Ensure Content-Type is set correctly in Postman.');
-    }
-
+    console.log('Request Body:', req.body);
     next();
 });
 
-// Basic health check route
+// Health check route
 app.get('/', (req, res) => {
     res.send('API is running...');
 });
 
-// Load routes
-console.log('Setting up routes...');
-try {
-    // Authentication and Patient Routes
-    app.use('/api/auth', authRoutes);
-    app.use('/api/patients', patientRoutes);
-    app.use('/api/protected', protectedRoutes); // Ensure this is required correctly
-    
-    // Admin Routes
-    app.use('/api/admin', adminRoutes);  // Use admin routes
+// Routes
+app.use('/api/auth', require('./routes/auth'));  // Auth routes
+app.use('/api/admin', authenticateToken, authorizeRole(['admin']), adminRoutes);  // Admin routes
+app.use('/api/clerk', authenticateToken, authorizeRole(['clerk']), clerkRoutes);  // Clerk route for patient registration
+app.use('/api/patients', authenticateToken, patientRoutes);  // Patient route for doctor and others to interact with patient data
+app.use('/api/nurse', authenticateToken, authorizeRole(['nurse']), nurseRoutes);  // Nurse route for vital signs management
+app.use('/api/pathologist', authenticateToken, authorizeRole(['pathologist']), pathologistRoutes);  // Pathologist route for diagnosis
 
-    // If you have the admissions route, ensure it's available
-    // app.use('/api/admissions', require('./routes/admissions')); // Uncomment if you need this route
-} catch (err) {
-    console.error('Error loading routes:', err.message);
-}
-
-// Graceful shutdown handler
+// Graceful Shutdown Handler
 const handleExit = (signal) => {
-    console.log(`\nReceived ${signal}. Closing server gracefully...`);
+    console.log(`\nReceived ${signal}. Closing server...`);
     if (global.server) {
         global.server.close(() => {
             console.log('Server closed.');
@@ -87,19 +56,22 @@ const handleExit = (signal) => {
     }
 };
 
-// Start the server only after MongoDB is connected
+// Start the Server
 const startServer = async () => {
     try {
-        console.log('Attempting to connect to MongoDB...');
+        console.log('Connecting to MongoDB...');
         await connectDB();
-        console.log('MongoDB Connected...');
+        console.log('MongoDB Connected.');
+        console.log('Setting up routes...');
 
         const PORT = process.env.PORT || 5001;
-        global.server = app.listen(PORT, () => {
-            console.log(`Server running on port ${PORT}`);
-            console.log('Listening for incoming requests...');
+        console.log(`Attempting to start server on port ${PORT}...`);
+
+        global.server = app.listen(PORT, '0.0.0.0', () => {
+            console.log(`Server successfully started on port ${PORT}`);
         });
 
+        // Handle graceful shutdown
         process.on('SIGINT', () => handleExit('SIGINT'));
         process.on('SIGTERM', () => handleExit('SIGTERM'));
     } catch (err) {
@@ -109,3 +81,5 @@ const startServer = async () => {
 };
 
 startServer();
+
+module.exports = app;
