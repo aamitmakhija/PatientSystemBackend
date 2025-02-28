@@ -5,6 +5,13 @@ const authorizeRole = require('../middleware/authorizeRole');
 
 const router = express.Router();
 
+// Controller import
+const adminController = require('../controller/admincontroller');
+
+// Define admin-specific routes
+router.get('/dashboard', adminController.dashboard); // Ensure adminController has a method called dashboard
+
+// POST route for creating a user (only accessible by admin)
 router.post('/users', authenticateToken, authorizeRole(['admin']), async (req, res) => {
   const { username, name, password, role } = req.body;
 
@@ -28,6 +35,7 @@ router.post('/users', authenticateToken, authorizeRole(['admin']), async (req, r
   }
 });
 
+// GET route for retrieving all users (only accessible by admin)
 router.get('/users', authenticateToken, authorizeRole(['admin']), async (req, res) => {
   try {
     const users = await User.find();
@@ -37,6 +45,7 @@ router.get('/users', authenticateToken, authorizeRole(['admin']), async (req, re
   }
 });
 
+// PUT route for updating user information (only accessible by admin)
 router.put('/users/:id', authenticateToken, authorizeRole(['admin']), async (req, res) => {
   const { id } = req.params;
   const { username, name, password, role } = req.body;
@@ -62,7 +71,7 @@ router.put('/users/:id', authenticateToken, authorizeRole(['admin']), async (req
   }
 });
 
-// Route for deleting a user (only accessible by admin)
+// DELETE route for deleting a user (only accessible by admin)
 router.delete('/users/:id', authenticateToken, authorizeRole(['admin']), async (req, res) => {
   const { id } = req.params;
 
@@ -78,4 +87,5 @@ router.delete('/users/:id', authenticateToken, authorizeRole(['admin']), async (
   }
 });
 
+// Export router once, at the end of the file
 module.exports = router;

@@ -1,20 +1,21 @@
 const express = require('express');
-const authenticateToken = require('../middleware/authmiddleware');
-const Patient = require('../models/patient'); // Assuming Patient model is set up
+const patientController = require('../controller/patientcontroller');  // Import the patient controller
 
 const router = express.Router();
 
-// Route to view patient details
-router.get('/:id', authenticateToken, async (req, res) => {
-  try {
-    const patient = await Patient.findById(req.params.id);
-    if (!patient) {
-      return res.status(404).json({ message: 'Patient not found' });
-    }
-    res.json(patient);
-  } catch (err) {
-    res.status(500).json({ message: 'Server error' });
-  }
+// Route to register a patient
+router.post('/register', patientController.registerPatient);
+
+// Route to get a patient by ID
+router.get('/:id', (req, res) => {
+    console.log('Fetching patient by ID:', req.params.id);  // Debugging log
+    patientController.getPatientById(req, res);  // Call the controller's method
 });
 
-module.exports = router;
+// Route to update a patient by ID
+router.put('/:id', patientController.updatePatientById);
+
+// Route to delete a patient by ID
+router.delete('/:id', patientController.deletePatientById);
+
+module.exports = router;  // Correctly export the router instance

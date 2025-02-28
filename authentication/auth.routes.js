@@ -1,7 +1,7 @@
 const express = require('express');
-const { login } = require('../authentication/auth.controller');  // Make sure this is correctly imported
-const authenticateToken = require('../middlewares/authMiddleware');  // Authentication middleware
-const authorizeRole = require('../middlewares/authorizeRole');  // Middleware to handle role-based access control
+const { login } = require('../authentication/auth.controller');  
+const authenticateToken = require('../middlewares/authMiddleware');  
+const authorizeRole = require('../middlewares/authorizeRole');  
 
 const router = express.Router();
 

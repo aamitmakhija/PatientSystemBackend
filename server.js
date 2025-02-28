@@ -11,16 +11,17 @@ const adminRoutes = require('./routes/admin');
 const clerkRoutes = require('./routes/clerk');
 const patientRoutes = require('./routes/patient');
 const nurseRoutes = require('./routes/nurse');
-const pathologistRoutes = require('./routes/pathalogist'); // Corrected pathologist route import
+const pathologistRoutes = require('./routes/pathalogist');
 
+// Load environment variables
 dotenv.config();
 
 const app = express();
 
 // Middleware
-app.use(express.json());
-app.use(express.urlencoded({ extended: false }));
-app.use(cors());
+app.use(express.json());  // Parse incoming JSON requests
+app.use(express.urlencoded({ extended: false }));  // Parse URL-encoded bodies
+app.use(cors());  // Enable CORS for cross-origin requests
 
 // Debug Logging for Incoming Requests
 app.use((req, res, next) => {
@@ -36,12 +37,12 @@ app.get('/', (req, res) => {
 });
 
 // Routes
-app.use('/api/auth', require('./routes/auth'));  // Auth routes
-app.use('/api/admin', authenticateToken, authorizeRole(['admin']), adminRoutes);  // Admin routes
-app.use('/api/clerk', authenticateToken, authorizeRole(['clerk']), clerkRoutes);  // Clerk route for patient registration
-app.use('/api/patients', authenticateToken, patientRoutes);  // Patient route for doctor and others to interact with patient data
-app.use('/api/nurse', authenticateToken, authorizeRole(['nurse']), nurseRoutes);  // Nurse route for vital signs management
-app.use('/api/pathologist', authenticateToken, authorizeRole(['pathologist']), pathologistRoutes);  // Pathologist route for diagnosis
+app.use('/api/auth', require('./routes/auth'));  // Authentication routes
+app.use('/api/admin', authenticateToken, authorizeRole(['admin']), adminRoutes);  // Admin routes, protected
+app.use('/api/clerk', authenticateToken, authorizeRole(['clerk']), clerkRoutes);  // Clerk routes, protected
+app.use('/api/patients', authenticateToken, authorizeRole(['doctor', 'admin']), patientRoutes);  // Role-based access for patient routes
+app.use('/api/nurse', authenticateToken, authorizeRole(['nurse']), nurseRoutes);  // Nurse routes, protected
+app.use('/api/pathologist', authenticateToken, authorizeRole(['pathologist']), pathologistRoutes);  // Pathologist routes, protected
 
 // Graceful Shutdown Handler
 const handleExit = (signal) => {
@@ -56,30 +57,33 @@ const handleExit = (signal) => {
     }
 };
 
-// Start the Server
-const startServer = async () => {
-    try {
-        console.log('Connecting to MongoDB...');
-        await connectDB();
-        console.log('MongoDB Connected.');
-        console.log('Setting up routes...');
+// Only start server if not in test mode (prevents conflict with Jest tests)
+if (process.env.NODE_ENV !== 'test') {
+    // Start the Server
+    const startServer = async () => {
+        try {
+            console.log('Connecting to MongoDB...');
+            await connectDB();  // Ensure MongoDB is connected
+            console.log('MongoDB Connected.');
+            console.log('Setting up routes...');
 
-        const PORT = process.env.PORT || 5001;
-        console.log(`Attempting to start server on port ${PORT}...`);
+            const PORT = process.env.PORT || 5001;  // Use PORT from .env or default to 5001
+            console.log(`Attempting to start server on port ${PORT}...`);
 
-        global.server = app.listen(PORT, '0.0.0.0', () => {
-            console.log(`Server successfully started on port ${PORT}`);
-        });
+            global.server = app.listen(PORT, '0.0.0.0', () => {
+                console.log(`Server successfully started on port ${PORT}`);
+            });
 
-        // Handle graceful shutdown
-        process.on('SIGINT', () => handleExit('SIGINT'));
-        process.on('SIGTERM', () => handleExit('SIGTERM'));
-    } catch (err) {
-        console.error('Server startup failed:', err.message);
-        process.exit(1);
-    }
-};
+            // Handle graceful shutdown
+            process.on('SIGINT', () => handleExit('SIGINT'));  // On SIGINT (Ctrl + C)
+            process.on('SIGTERM', () => handleExit('SIGTERM'));  // On SIGTERM (termination signal)
+        } catch (err) {
+            console.error('Server startup failed:', err.message);
+            process.exit(1);
+        }
+    };
 
-startServer();
+    startServer();
+}
 
-module.exports = app;
+module.exports = app;  // Export the app for testing purposes
