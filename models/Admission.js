@@ -1,30 +1,30 @@
 const mongoose = require('mongoose');
 
-// Schema for storing admission details of a patient
+
 const AdmissionSchema = new mongoose.Schema(
     {
         patientId: {
             type: mongoose.Schema.Types.ObjectId,
-            ref: 'Patient',  // Reference to the Patient model
-            required: [true, 'Patient ID is required'],  // Ensure patient ID is provided
+            ref: 'Patient',  
+            required: [true, 'Patient ID is required'],  
         },
         ward: {
             type: String,
-            required: [true, 'Ward is required'],  // Ensure ward is specified
-            enum: ['ICU', 'General', 'Pediatrics', 'Surgery'],  // Allowed ward types
+            required: [true, 'Ward is required'],  
+            enum: ['ICU', 'General', 'Pediatrics', 'Surgery'],  
         },
         doctor: {
             type: String,
-            trim: true,  // Remove extra spaces from the doctor's name
+            trim: true,  
         },
         admittedAt: {
             type: Date,
-            default: Date.now,  // Set default value to current time
+            default: Date.now,  
         },
         dischargedAt: {
             type: Date,
             validate: {
-                // Ensure discharge date is not earlier than admission date
+                
                 validator: function (value) {
                     return !value || value >= this.admittedAt;
                 },
@@ -33,7 +33,7 @@ const AdmissionSchema = new mongoose.Schema(
         },
     },
     {
-        timestamps: true,  // Automatically adds createdAt and updatedAt fields
+        timestamps: true,  
     }
 );
 

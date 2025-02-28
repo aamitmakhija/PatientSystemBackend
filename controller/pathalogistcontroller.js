@@ -1,6 +1,6 @@
 const Patient = require('../models/patient'); 
 
-// Update diagnosis for a patient (only accessible by pathologist)
+
 exports.updateDiagnosis = async (req, res) => {
   const { id } = req.params;
   const { diagnosis } = req.body;

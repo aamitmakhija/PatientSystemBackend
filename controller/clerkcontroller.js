@@ -1,6 +1,5 @@
-// controllers/clerkController.js
 
-const Patient = require('../models/Patient');  // Import the Patient model
+const Patient = require('../models/Patient');  
 
 exports.createPatient = async (req, res) => {
     const { firstName, lastName, dateOfBirth, knownDiseases, servicePoint } = req.body;

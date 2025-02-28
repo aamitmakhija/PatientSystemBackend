@@ -1,6 +1,5 @@
-const Doctor = require('../models/user');  // doctors are stored in the User model or a separate Doctor model
+const Doctor = require('../models/user');  
 
-// Create a doctor
 exports.createDoctor = async (req, res) => {
     const { username, name, password, role } = req.body;
 

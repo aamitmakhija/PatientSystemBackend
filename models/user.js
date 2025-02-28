@@ -1,7 +1,7 @@
 const mongoose = require('mongoose');
 const bcrypt = require('bcryptjs');
 
-// Check if the model already exists
+
 const UserSchema = new mongoose.Schema({
     username: {
         type: String,
@@ -37,12 +37,12 @@ UserSchema.pre('save', async function (next) {
     }
 });
 
-// Compare entered password with stored hash
+
 UserSchema.methods.comparePassword = async function (enteredPassword) {
     return await bcrypt.compare(enteredPassword, this.password);
 };
 
-// Check if the model already exists, and use it if so
+
 const User = mongoose.models.User || mongoose.model('User', UserSchema);
 
 module.exports = User;

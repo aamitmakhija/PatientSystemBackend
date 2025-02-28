@@ -1,19 +1,19 @@
-const Patient = require('../models/patient'); // Import Patient model
+const Patient = require('../models/patient'); 
 
 exports.updateVitalSigns = async (req, res) => {
-    const { id } = req.params; // Get patient ID from the URL params
-    const { temperature, bloodPressure, pulseRate } = req.body; // Get vital signs from the request body
+    const { id } = req.params; 
+    const { temperature, bloodPressure, pulseRate } = req.body; 
 
     if (!temperature || !bloodPressure || !pulseRate) {
         return res.status(400).json({ message: 'All vital signs (temperature, bloodPressure, pulseRate) are required.' });
     }
 
     try {
-        // Find the patient by ID and update vital signs
+       
         const patient = await Patient.findByIdAndUpdate(
             id, 
             { temperature, bloodPressure, pulseRate },
-            { new: true }  // Return the updated patient document
+            { new: true }  
         );
 
         if (!patient) {
