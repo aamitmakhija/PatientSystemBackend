@@ -1,4 +1,4 @@
-# DevOpS_PatientSystemBackend - Group 1 Submission
+![image](https://github.com/user-attachments/assets/0629b7ef-343c-4811-b83a-5267df89ec70)# DevOpS_PatientSystemBackend - Group 1 Submission
 A code to build api system for patient registration and managment system
 # DevOpS_PatientSystemBackend
 A code to build api system for patient registration and managment system
@@ -20,7 +20,8 @@ Before running the application, ensure that you have the following installed:
 	•	Node.js: Ensure you have Node.js installed (version 14 or higher).
 	•	MongoDB: Ensure that MongoDB is running locally or you are using MongoDB Atlas for cloud-based databases.
 
-Setup
+
+Deployment Guide
 
 Step 1: Clone the Repository
 
@@ -28,24 +29,32 @@ Clone the repository to your local machine:
 git clone https://github.com/aamitmakhija/PatientSystemBackend.git
 cd PatientSystemBackend
 
-Step 2: Install Dependencies
+Step 2(optional as dockerized) : Install Dependencies:  
 
-Install the required dependencies using npm:
+2.1 npm install 
 
-Step 3: Configure Environment Variables
+2.2 Configure Environment: Create a .env file with database and authentication secrets.
 
-Create a .env file in the root directory with the following variables:
-MONGO_URI=mongodb://yourMongoDBConnectionString
-JWT_SECRET=yourJWTSecretKey
-PORT=5001
+		MONGODB_URL="MONGODB_URI=mongodb+srv://<username>:<password>@<cluster-address>/?retryWrites=true&w=majority&appName=<app-name>"
+		PORT="3000"
+		JWT_SECRET="your_jwt_secret_key_here"
 
-Ensure to replace yourMongoDBConnectionString and yourJWTSecretKey with your actual MongoDB connection string and a secret key for JWT authentication.
+2.3 Start MongoDB: Ensure MongoDB is running locally or via a cloud service.
+
+2.4 Run the Server: node server.js
+
+
+
+[image](https://github.com/user-attachments/assets/743977ad-4fb1-479b-b731-38c1690dab58)
+
 
 Step 4: Start the Application
 
 The application should now be accessible at http://localhost:5001.
 
-API Endpoints
+
+API Endpoints (Use Postman export file included in submission)
+
 
 1. User Authentication
 	•	POST /api/auth/login: Login route for authenticating users. Accepts username and password as the request body. Returns a JWT token for access.
@@ -71,8 +80,16 @@ Feel free to fork the repository, make changes, and submit a pull request.
 	4.	Push to your forked repository (git push origin feature/your-feature).
 	5.	Open a pull request to merge your changes into the main branch.
 
+API Testing 
+Click on send to login for Admin role first (assuming no user created)
+Copy & paste generated token in enviorement (e.g {{token_admin}} {{token_clerk}} {{token_doctoer}} {{token_nurse}} {{token_pathologist}}
+
 
 Contact
 
 For any queries or suggestions, feel free to contact:
-	•	Email: amit_makhija@outlook.com
+	•	Email: amit_makhija@outlook.com or steambeka@gmail.com or rejoizjs@gmail.com or zstepmoon@mail.ru or ahmedfayazyousuf@gmail.com
+
+
+
+
