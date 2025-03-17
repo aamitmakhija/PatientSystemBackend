@@ -1,0 +1,351 @@
+{
+	"info": {
+		"_postman_id": "a973ac3a-5c61-4fe5-befd-0a0906b7c35e",
+		"name": "Patient-info_system",
+		"schema": "https://schema.getpostman.com/json/collection/v2.0.0/collection.json",
+		"_exporter_id": "41479384"
+	},
+	"item": [
+		{
+			"name": "AdminLogin",
+			"protocolProfileBehavior": {
+				"disabledSystemHeaders": {
+					"content-type": true
+				}
+			},
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": {
+						"token": "{{token_admin}}"
+					}
+				},
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n  \"username\": \"amit_makhija@outlook.com\",\n  \"password\": \"alpha123\"\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": "http://127.0.0.1:5001/api/auth/login"
+			},
+			"response": []
+		},
+		{
+			"name": "Admin_CreateUser",
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": {
+						"token": "{{token_admin}}"
+					}
+				},
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"username\": \"zstepmoon@mail.ru\",\n    \"name\": \"Zhanna\",\n    \"password\": \"alpha123\",\n    \"role\": \"pathologist\"\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": "http://127.0.0.1:5001/api/admin/users"
+			},
+			"response": []
+		},
+		{
+			"name": "AdminGetUsers",
+			"protocolProfileBehavior": {
+				"disableBodyPruning": true
+			},
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": {
+						"token": "{{token_admin}}"
+					}
+				},
+				"method": "GET",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": "http://127.0.0.1:5001/api/admin/users"
+			},
+			"response": []
+		},
+		{
+			"name": "AdminUpdateUser",
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": {
+						"token": "{{token_admin}}"
+					}
+				},
+				"method": "PUT",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n  \"username\": \"zstepmoon@mail.ru\",\n  \"name\": \"Zhanna\",\n  \"password\": \"alpha123\",\n  \"role\": \"pathologist\"\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": "http://127.0.0.1:5001/api/admin/users/67be943eea8e08dcb7bbd369"
+			},
+			"response": []
+		},
+		{
+			"name": "AdminDeleteUser",
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": {
+						"token": "{{token_admin}}"
+					}
+				},
+				"method": "DELETE",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": "http://127.0.0.1:5001/api/admin/users/67be943eea8e08dcb7bbd369"
+			},
+			"response": []
+		},
+		{
+			"name": "ClerkLogin",
+			"request": {
+				"auth": {
+					"type": "noauth"
+				},
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n  \"username\": \"steambeka@gmail.com\",\n  \"password\": \"alpha123\"\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": "http://127.0.0.1:5001/api/auth/login"
+			},
+			"response": []
+		},
+		{
+			"name": "ClerkRegisterPatient",
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": {
+						"token": "{{token_clerk}}"
+					}
+				},
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n  \"username\": \"patient456\",\n  \"name\": \"Jason\",\n  \"age\": 30,\n  \"gender\": \"Male\",\n  \"servicePoint\": \"OPD\"\n\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": "http://127.0.0.1:5001/api/clerk/register-patient"
+			},
+			"response": []
+		},
+		{
+			"name": "DocLogin",
+			"request": {
+				"auth": {
+					"type": "noauth"
+				},
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n  \"username\": \"ahmedfayazyousuf@gmail.com\",\n  \"password\": \"alpha123\"\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": "http://127.0.0.1:5001/api/auth/login"
+			},
+			"response": []
+		},
+		{
+			"name": "DocViewPatient",
+			"protocolProfileBehavior": {
+				"disableBodyPruning": true
+			},
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": {
+						"token": "{{token_doctor}}"
+					}
+				},
+				"method": "GET",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": "http://127.0.0.1:5001/api/patients/67bea71ae2aacbd97ee6f51b"
+			},
+			"response": []
+		},
+		{
+			"name": "DocUpdateDiagnosis",
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": {
+						"token": "{{token_doctor}}"
+					}
+				},
+				"method": "PUT",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n  \"diagnosis\": \"cold and cough\"\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": "http://127.0.0.1:5001/api/doctor/patients/67bea71ae2aacbd97ee6f51b/diagnosis"
+			},
+			"response": []
+		},
+		{
+			"name": "NurseLogin",
+			"request": {
+				"auth": {
+					"type": "noauth"
+				},
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n  \"username\": \"rejoizjs@gmail.com\",\n  \"password\": \"alpha123\"\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": "http://127.0.0.1:5001/api/auth/login"
+			},
+			"response": []
+		},
+		{
+			"name": "NurseAddVitals",
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": {
+						"token": "{{token_nurse}}"
+					}
+				},
+				"method": "PUT",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n  \"temperature\": \"98.6\",\n  \"bloodPressure\": \"120/80\",\n  \"pulseRate\": \"75\"\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": "http://127.0.0.1:5001/api/nurse/patients/67bea71ae2aacbd97ee6f51b/vital-signs"
+			},
+			"response": []
+		},
+		{
+			"name": "PathLogin",
+			"request": {
+				"auth": {
+					"type": "noauth"
+				},
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n  \"username\": \"zstepmoon@mail.ru\",\n  \"password\": \"alpha123\"\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": "http://127.0.0.1:5001/api/auth/login"
+			},
+			"response": []
+		},
+		{
+			"name": "PathUpdate",
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": {
+						"token": "{{token_pathologist}}"
+					}
+				},
+				"method": "PUT",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n  \"diagnosis\": \"Severe Cold and Cough\"\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": "http://127.0.0.1:5001/api/pathologist/patients/67bea71ae2aacbd97ee6f51b/diagnosis"
+			},
+			"response": []
+		}
+	]
+}
