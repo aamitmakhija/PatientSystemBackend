@@ -1,7 +1,6 @@
 const mongoose = require('mongoose');
 const bcrypt = require('bcryptjs');
 
-
 const UserSchema = new mongoose.Schema({
     username: {
         type: String,
@@ -19,30 +18,20 @@ const UserSchema = new mongoose.Schema({
     },
     role: {
         type: String,
-        enum: ['admin', 'doctor', 'nurse', 'clerk', 'pathologist'],  // 5 user roles for hospital staff 
+        enum: ['admin', 'doctor', 'nurse', 'clerk'], // Ensure 'admin' is included here
         required: true,
     }
 }, { timestamps: true });
 
-// Hash password before saving or updating
-UserSchema.pre('save', async function (next) {
+UserSchema.pre('save', async function(next) {
     if (!this.isModified('password')) return next();
-
-    try {
-        const salt = await bcrypt.genSalt(10);
-        this.password = await bcrypt.hash(this.password, salt);
-        next();
-    } catch (err) {
-        next(err);
-    }
+    const salt = await bcrypt.genSalt(10);
+    this.password = await bcrypt.hash(this.password, salt);
+    next();
 });
 
-
-UserSchema.methods.comparePassword = async function (enteredPassword) {
+UserSchema.methods.comparePassword = async function(enteredPassword) {
     return await bcrypt.compare(enteredPassword, this.password);
 };
 
-
-const User = mongoose.models.User || mongoose.model('User', UserSchema);
-
-module.exports = User;
+module.exports = mongoose.model('User', UserSchema);
