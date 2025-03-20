@@ -1,14 +1,6 @@
 const express = require('express');
 const dotenv = require('dotenv');
 const connectDB = require('./config/db');
-<<<<<<< HEAD
-const cors = require('cors'); // Importing CORS package
-const authRoutes = require('./authentication/auth.routes');
-const patientRoutes = require('./routes/patients');
-const protectedRoutes = require('./routes/protectedRoutes');
-const adminRoutes = require('./routes/admin');  // Import admin routes
-const admissionRoutes = require('./routes/admissions'); 
-=======
 const cors = require('cors');
 
 const authenticateToken = require('./middleware/authmiddleware');
@@ -21,7 +13,6 @@ const patientRoutes = require('./routes/patient');
 const nurseRoutes = require('./routes/nurse');
 const pathologistRoutes = require('./routes/pathalogist');
 
->>>>>>> e40f0174dfad25093bc2c05f51f257bb035bad20
 // Load environment variables
 dotenv.config();
 
@@ -45,25 +36,6 @@ app.get('/', (req, res) => {
     res.send('API is running...');
 });
 
-<<<<<<< HEAD
-// Load routes
-console.log('Setting up routes...');
-try {
-    // Authentication and Patient Routes
-    app.use('/api/auth', authRoutes); //Authentication Routess
-    app.use('/api/patients', patientRoutes); //Patient Routes
-    app.use('/api/protected', protectedRoutes); // Ensure this is required correctly
-    app.use('/api/admissions', admissionRoutes);  //Admission Routes
-    
-    // Admin Routes
-    app.use('/api/admin', adminRoutes);  // Use admin routes  
-
-} catch (err) {
-    console.error('Error loading routes:', err.message);
-}
-
-// Graceful shutdown handler
-=======
 // Routes
 app.use('/api/auth', require('./routes/auth'));  // Authentication routes
 app.use('/api/admin', authenticateToken, authorizeRole(['admin']), adminRoutes);  // Admin routes, protected
@@ -73,7 +45,6 @@ app.use('/api/nurse', authenticateToken, authorizeRole(['nurse']), nurseRoutes);
 app.use('/api/pathologist', authenticateToken, authorizeRole(['pathologist']), pathologistRoutes);  // Pathologist routes, protected
 
 // Graceful Shutdown Handler
->>>>>>> e40f0174dfad25093bc2c05f51f257bb035bad20
 const handleExit = (signal) => {
     console.log(`\nReceived ${signal}. Closing server...`);
     if (global.server) {
