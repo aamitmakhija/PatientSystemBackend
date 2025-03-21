@@ -46,8 +46,6 @@ jobs:
         tags: |
           ${{ secrets.DOCKER_USERNAME }}/patientsystembackend:latest
           ${{ secrets.DOCKER_USERNAME }}/patientsystembackend:${{ github.sha }}
-      
-      
 
     # - name: Install dependencies
     #   run: npm install
@@ -66,47 +64,19 @@ jobs:
         sudo systemctl start docker
         sudo systemctl enable docker
         sudo usermod -aG docker $USER
+        sudo chmod 666 /var/run/docker.sock
+        newgrp docker
 
     - name: Login to Docker Hub
-      run: docker login -u ${{ secrets.DOCKER_USERNAME }} -p ${{ secrets.DOCKER_PASSWORD }}
-    - name: Pull image from docker hub
-      run: docker pull ${{ secrets.DOCKER_USERNAME }}/patientsystembackend:latest
-      
-    - name: Delete existing container
-      run:  docker rm -f patientsystembackend-container || true
-    - name: Run docker container
-      run:  docker run -d -p 5001:5001 --name patientsystembackend-container  ${{ secrets.DOCKER_USERNAME }}/patientsystembackend:latest
+      run: |
+        echo ${{ secrets.DOCKER_PASSWORD }} | sudo docker login -u ${{ secrets.DOCKER_USERNAME }} --password-stdin
 
-    # - name: Checkout code
-    #   uses: actions/checkout@v2
-
-    # - name: Set up SSH key for deployment
-    #   run: |
-    #     echo "${{ secrets.DEPLOY_KEY }}" > deploy_key
-    #     chmod 600 deploy_key
-    #     eval $(ssh-agent -s)
-    #     ssh-add deploy_key
-    #     mkdir -p ~/.ssh
-    #     ssh-keyscan github.com >> ~/.ssh/known_hosts
-
-    # - name: Deploy to production
-    #   run: ssh user@your-server "cd /path/to/your/app && git pull && pm2 restart all"
-    #   env:
-    #     DEPLOY_KEY: ${{ secrets.DEPLOY_KEY }}
-
-    # - name: Checkout code
-    #   uses: actions/checkout@v2
-
-    # - name: Set up SSH key for deployment
-    #   run: |
-    #     echo "${{ secrets.DEPLOY_KEY }}" > deploy_key
-    #     chmod 600 deploy_key
-    #     eval $(ssh-agent -s)
-    #     ssh-add deploy_key
-    #     mkdir -p ~/.ssh
-    #     ssh-keyscan github.com >> ~/.ssh/known_hosts
-
-    # - name: Deploy to production
-    #   run: ssh user@your-server "cd /path/to/your/app && git pull && pm2 restart all"
-    #   env:
-    #     DEPLOY_KEY: ${{ secrets.DEPLOY_KEY }}
+    - name: Pull and Run Container
+      run: |
+        sudo docker pull ${{ secrets.DOCKER_USERNAME }}/patientsystembackend:latest
+        sudo docker rm -f patientsystembackend-container || true
+        sudo docker run -d \
+          -p 5001:5001 \
+          --name patientsystembackend-container \
+          --restart unless-stopped \
+          ${{ secrets.DOCKER_USERNAME }}/patientsystembackend:latest
