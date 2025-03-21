@@ -1,7 +1,7 @@
 const express = require('express');
-const Patient = require('../models/Patient');
-const authenticateToken = require('../middlewares/authMiddleware');  // Authentication middleware
-const authorizeRole = require('../middlewares/authorizeRole');  // Authorization middleware
+const Patient = require('../models/patient.js');
+const authenticateToken = require('../middleware/authmiddleware');  // Authentication middleware
+const authorizeRole = require('../middleware/authorizeRole');  // Authorization middleware
 const router = express.Router();
 const Admission=require('../models/Admission');
 

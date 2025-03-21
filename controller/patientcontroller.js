@@ -2,9 +2,9 @@ const Patient = require('../models/patient'); // Assuming Patient model is set u
 
 // Register a new patient
 const registerPatient = async (req, res) => {
-  const { name, age, servicePoint } = req.body;
+  const { name, age, gender, contact, symptoms, registrationType } = req.body;
 
-  if (!name || !age || !servicePoint) {
+  if (!name || !age || !gender|| !contact || !symptoms || !registrationType ) {
     return res.status(400).json({ message: 'Missing required fields' });
   }
 
@@ -12,11 +12,22 @@ const registerPatient = async (req, res) => {
     const newPatient = new Patient({
       name,
       age,
-      servicePoint,
+      gender,
+      contact,
+      symptoms,
+      registrationType
     });
 
     await newPatient.save();
-    res.status(201).json({ patientId: newPatient._id });  // Return the created patient's ID
+    res.status(201).json({ 
+      patientId: newPatient._id, 
+      patientName: newPatient.name,
+      patientAge: newPatient.age,
+      patientGender: newPatient.gender,
+      patientContact: newPatient.contact,
+      patientSymptoms: newPatient.symptoms,
+      patientRegistrationType: newPatient.registrationType
+   });  // Return the created patient's ID
   } catch (err) {
     res.status(500).json({ message: 'Server error' });
   }

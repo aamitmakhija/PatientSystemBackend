@@ -12,29 +12,33 @@ const adminController = require('../controller/admincontroller');
 router.get('/dashboard', adminController.dashboard); // Ensure adminController has a method called dashboard
 
 // POST route for creating a user (only accessible by admin)
+
 router.post('/users', authenticateToken, authorizeRole(['admin']), async (req, res) => {
-  const { username, name, password, role } = req.body;
+    const { username, name, password, role } = req.body;
 
-  if (!username || !name || !password || !role) {
-    return res.status(400).json({ message: 'All fields are required.' });
-  }
-
-  try {
-
-    const existingUser = await User.findOne({ username });
-    if (existingUser) {
-      return res.status(400).json({ message: 'User already exists.' });
+    if (!username || !name || !password || !role) {
+        return res.status(400).json({ message: 'All fields are required.' });
     }
 
-    // Create new user
-    const newUser = new User({ username, name, password, role });
-    await newUser.save();
-    res.status(201).json({ message: 'User created successfully' });
-  } catch (err) {
-    res.status(500).json({ message: 'Server error' });
-  }
-});
+    try {
 
+        const existingUser = await User.findOne({ username});
+         if (existingUser) {
+            return res.status(400).json({ message: 'User already exists.' });
+        }
+
+        // Create new user
+        const newUser = new User({ username, name, password, role });
+                await newUser.save();
+ res.status(201).json({ message: 'User created successfully'});
+    } catch (err) {
+      console.error('User creation error:', err);
+      res.status(500).json({ message: 'Server error', error: err.message });
+    }
+  });
+
+
+  
 // GET route for retrieving all users (only accessible by admin)
 router.get('/users', authenticateToken, authorizeRole(['admin']), async (req, res) => {
   try {

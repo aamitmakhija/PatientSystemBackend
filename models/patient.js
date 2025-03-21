@@ -16,7 +16,7 @@ const PatientSchema = new mongoose.Schema(
         gender: {
             type: String,
             required: [true, 'Gender is required'],
-            enum: ['Male', 'Female', 'Other'],  // Restrict gender to valid options
+            enum: ['Male', 'Female'],  // Restrict gender to valid options
         },
         contact: {
             type: String,
