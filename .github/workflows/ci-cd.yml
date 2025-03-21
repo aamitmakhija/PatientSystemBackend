@@ -19,9 +19,9 @@ jobs:
     - name: Login to docker hub
       run: docker login -u ${{ secrets.DOCKER_USERNAME}} -p ${{ secrets.DOCKER_PASSWORD}}
     - name: Build Docker image
-      run: docker build -t rejoiz/PatientSystemBackend .
+      run: docker build -t rejoiz/patientsystembackend .
     - name: Publish image to docker hub
-      run: docker push rejoiz/PatientSystemBackend:latest
+      run: docker push rejoiz/patientsystembackend:latest
       
     #   name: Set up Node.js
     #   uses: actions/setup-node@v2
@@ -39,11 +39,11 @@ jobs:
     needs: build
     steps:
     - name: Pull image from docker hub
-      run:  docker pull rejoiz/PatientSystemBackend:latest
+      run:  docker pull rejoiz/patientsystembackend:latest
     - name: Delete existing container
-      run:  docker rm -f PatientSystemBackend-container
+      run:  docker rm -f patientsystembackend-container
     - name: Run docker container
-      run:  docker run -d -p 5001:5001 --name PatientSystemBackend-container rejoiz/PatientSystemBackend:latest
+      run:  docker run -d -p 5001:5001 --name patientsystembackend-container rejoiz/patientsystembackend:latest
 
     # - name: Checkout code
     #   uses: actions/checkout@v2
