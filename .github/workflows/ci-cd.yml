@@ -37,6 +37,7 @@ jobs:
       run: |
         npm install bcryptjs@3.0.2 --save
         npm install --no-package-lock --legacy-peer-deps
+        npm install jsonwebtoken@9.0.2 --save
 
     - name: Build and push Docker image
       uses: docker/build-push-action@v4
@@ -46,6 +47,8 @@ jobs:
         tags: |
           ${{ secrets.DOCKER_USERNAME }}/patientsystembackend:latest
           ${{ secrets.DOCKER_USERNAME }}/patientsystembackend:${{ github.sha }}
+        build-args: |
+          NODE_ENV=production
 
     # - name: Install dependencies
     #   run: npm install
@@ -77,6 +80,13 @@ jobs:
         sudo docker rm -f patientsystembackend-container || true
         sudo docker run -d \
           -p 5001:5001 \
+          -e NODE_ENV=production \
+          -e MONGODB_URI=${{ secrets.MONGODB_URI }} \
+          -e JWT_SECRET=${{secrets.JWT_SECRET}} \
           --name patientsystembackend-container \
           --restart unless-stopped \
           ${{ secrets.DOCKER_USERNAME }}/patientsystembackend:latest
+        
+        # Wait for container to start and check logs
+        sleep 10
+        sudo docker logs patientsystembackend-container
