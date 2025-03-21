@@ -16,9 +16,9 @@ mongoose.connect(process.env.MONGO_URI, {
     // Define the users to be added
     const users = [
         { username: "steambeka@gmail.com", name: "Bekzat Kuanyashkaliyev", password: "alpha123", role: "admin" },
-        { username: "rejoizjs@gmail.com", name: "Rejoiz Joy", password: "alpha123", role: "nurse" },
+        { username: "rejoizjs@gmail.com", name: "Rejoiz Joy", password: "alpha123", role: "admin" },
         { username: "ahmedfayazyousuf@gmail.com", name: "Yousuf Ahmed", password: "alpha123", role: "doctor" },
-        { username: "zstepmoon@mail.ru", name: "Zhanna", password: "alpha123", role: "admin" },
+        { username: "zstepmoon@mail.ru", name: "Zhanna", password: "alpha123", role: "nurse" },
         { username: "amit_makhija@outlook.com", name: "Amit Makhija", password: "alpha123", role: "clerk" },  // Changed role to clerk
     ];
 

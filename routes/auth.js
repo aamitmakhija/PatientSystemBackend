@@ -1,5 +1,5 @@
 const express = require('express');
-const User = require('../models/User'); // User model
+const User = require('../models/user.js'); // User model
 const bcrypt = require('bcryptjs'); // for password comparison
 const jwt = require('jsonwebtoken'); // for generating JWT tokens
 const router = express.Router();

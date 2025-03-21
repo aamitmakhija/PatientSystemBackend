@@ -5,19 +5,30 @@ const AdmissionSchema = new mongoose.Schema(
     {
         patientId: {
             type: mongoose.Schema.Types.ObjectId,
-            ref: 'Patient',  
-            required: [true, 'Patient ID is required'],  
+            ref: 'Patient',  //  Referring to the Patient model
+            required: [true, 'Patient ID is required'],  // Ensure patient ID is provided
+ 
         },
-        ward: {
+        wardType: {
             type: String,
-            required: [true, 'Ward is required'],  
-            enum: ['ICU', 'General', 'Pediatrics', 'Surgery'],  
+            required: [true, 'Ward is required'],  // Ensure ward is specified
+            enum: ['Medicine A',       'Medicine B',       'Medicine C',       'Medicine D',
+                'Surgery A',        'Surgery B',        'Surgery C',        'Surgery D', 
+                'Orthopedics A',    'Orthopedics B',    'Orthopedics C',    'Orthopedics D',
+                'Pediatrics A',     'Pediatrics B',     'Pediatrics C',     'Pediatrics D',
+                'ENT A',            'ENT B',            'ENT C',            'ENT D',
+                'Opthalmology A ',  'Opthalmology B ',  'Opthalmology C ',  'Opthalmology D', 
+                'Gynecology A',     'Gynecology B',     'Gynecology C',     'Gynecology D',
+                'Dermatology A',    'Dermatology B',    'Dermatology C',    'Dermatology D',
+                'Oncology A',       'Oncology B',       'Oncology C',       'Oncology D',
+                'ICU',              'CCU'],  // Allowed ward types
+            required: [true, 'Ward is required'],   
         },
-        doctor: {
+        doctorAssigned:{
             type: String,
             trim: true,  
         },
-        admittedAt: {
+        dateOfAdmission:{
             type: Date,
             default: Date.now,  
         },
@@ -26,7 +37,7 @@ const AdmissionSchema = new mongoose.Schema(
             validate: {
                 
                 validator: function (value) {
-                    return !value || value >= this.admittedAt;
+                    return !value || value >= this.dateOfAdmission;
                 },
                 message: 'Discharge date cannot be earlier than admission date',
             },

@@ -1,16 +1,48 @@
 const mongoose = require('mongoose');
 
-const patientSchema = new mongoose.Schema({
-  username: { type: String, required: true },
-  name: { type: String, required: true },
-  age: { type: Number, required: true },
-  gender: { type: String, required: true },
-  disease: { type: String },
-  servicePoint: { type: String, required: true }, // OPD, A&E, etc.
-  diagnosis: { type: String },
-  registrationDate: { type: Date, default: Date.now }
-});
+// Schema for storing patient details
+const PatientSchema = new mongoose.Schema(
+    {
+        name: {
+            type: String,
+            required: [true, 'Name is required'],
+            trim: true,  // Remove leading/trailing spaces
+        },
+        age: {
+            type: Number,
+            required: [true, 'Age is required'],
+            min: [0, 'Age must be a positive number'],  // Ensure age is non-negative
+        },
+        gender: {
+            type: String,
+            required: [true, 'Gender is required'],
+            enum: ['Male', 'Female'],  // Restrict gender to valid options
+        },
+        contact: {
+            type: String,
+            validate: {
+                // Validate that the phone number is a 10-digit number
+                validator: function (v) {
+                    return /^\d{10}$/.test(v);
+                },
+                message: (props) => `${props.value} is not a valid phone number!`,
+            },
+        },
+        symptoms: {
+            type: String,
+            trim: true,  // Remove extra spaces from symptoms
+            default: 'Not specified',  // Default value if no symptoms are provided
+        },
+        registrationType:{ //Added registration type
+            type: String, 
+            enum:['OPD','A&E'], 
+            required: true
+        },
+    },
+    {
+        timestamps: true,  // Automatically add createdAt and updatedAt fields
+    }
+);
 
-const Patient = mongoose.model('Patient', patientSchema);
-
-module.exports = Patient;
+// Export the Patient model
+module.exports = mongoose.model('Patient', PatientSchema);

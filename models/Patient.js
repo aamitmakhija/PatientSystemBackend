@@ -33,6 +33,11 @@ const PatientSchema = new mongoose.Schema(
             trim: true,  // Remove extra spaces from symptoms
             default: 'Not specified',  // Default value if no symptoms are provided
         },
+        registrationType:{ //Added registration type
+            type: String, 
+            enum:['OPD','A&E'], 
+            required: true
+        },
     },
     {
         timestamps: true,  // Automatically add createdAt and updatedAt fields
