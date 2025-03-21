@@ -68,18 +68,30 @@ jobs:
         sudo systemctl enable docker
         sudo usermod -aG docker $USER
         sudo chmod 666 /var/run/docker.sock
-        newgrp docker
 
     - name: Login to Docker Hub
       run: |
-        echo ${{ secrets.DOCKER_PASSWORD }} | sudo docker login -u ${{ secrets.DOCKER_USERNAME }} --password-stdin
+        echo "${{ secrets.DOCKER_PASSWORD }}" | sudo docker login -u "${{ secrets.DOCKER_USERNAME }}" --password-stdin
 
-    - name: Pull and Run Container
+    - name: Deploy Container
+      env:
+        MONGODB_URI: ${{ secrets.MONGODB_URI }}
+        JWT_SECRET: ${{ secrets.JWT_SECRET }}
       run: |
         sudo docker pull ${{ secrets.DOCKER_USERNAME }}/patientsystembackend:latest
-        sudo docker rm -f patientsystembackend-container || true
-        sudo docker run -d -p 5001:5001 -e NODE_ENV=production -e MONGODB_URI=${{ secrets.MONGODB_URI }} -e JWT_SECRET=${{secrets.JWT_SECRET}} --name patientsystembackend-container --restart unless-stopped ${{ secrets.DOCKER_USERNAME }}/patientsystembackend:latest
+        sudo docker stop patientsystembackend-container || true
+        sudo docker rm patientsystembackend-container || true
+        sudo docker run -d \
+          --name patientsystembackend-container \
+          -p 5001:5001 \
+          -e NODE_ENV=production \
+          -e MONGODB_URI="${MONGODB_URI}" \
+          -e JWT_SECRET="${JWT_SECRET}" \
+          --restart unless-stopped \
+          ${{ secrets.DOCKER_USERNAME }}/patientsystembackend:latest
         
-        # Wait for container to start and check logs
+    - name: Check Container Status
+      run: |
         sleep 10
+        sudo docker ps
         sudo docker logs patientsystembackend-container
