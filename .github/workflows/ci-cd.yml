@@ -78,14 +78,7 @@ jobs:
       run: |
         sudo docker pull ${{ secrets.DOCKER_USERNAME }}/patientsystembackend:latest
         sudo docker rm -f patientsystembackend-container || true
-        sudo docker run -d \
-          -p 5001:5001 \
-          -e NODE_ENV=production \
-          -e MONGODB_URI=${{ secrets.MONGODB_URI }} \
-          -e JWT_SECRET=${{secrets.JWT_SECRET}} \
-          --name patientsystembackend-container \
-          --restart unless-stopped \
-          ${{ secrets.DOCKER_USERNAME }}/patientsystembackend:latest
+        sudo docker run -d -p 5001:5001 -e NODE_ENV=production -e MONGODB_URI=${{ secrets.MONGODB_URI }} -e JWT_SECRET=${{secrets.JWT_SECRET}} --name patientsystembackend-container --restart unless-stopped ${{ secrets.DOCKER_USERNAME }}/patientsystembackend:latest
         
         # Wait for container to start and check logs
         sleep 10
