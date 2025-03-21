@@ -4,9 +4,9 @@ on:
   push:
     branches:
       - RejoizBranch
-  # pull_request:
-  #   branches:
-  #     - main
+# pull_request:
+#   branches:
+#     - main
 
 jobs:
   build:
@@ -24,11 +24,16 @@ jobs:
       with:
         node-version: '14'
     
-    - name: Clean npm cache
-      run: npm cache clean --force    
+    - name: Clean installation
+      run: |
+        rm -rf node_modules
+        rm -f package-lock.json
+        npm cache clean --force    
 
     - name: Install dependencies
-      run: npm install --force
+      run: |
+        npm install bcryptjs --save
+        npm install --no-package-lock
 
     - name: Build Docker image
       run: docker build -t rejoiz/patientsystembackend .
@@ -45,8 +50,8 @@ jobs:
     #   run: npm test
 
   deploy:
-    runs-on: [aws-ec2]
     needs: build
+    runs-on: [aws-ec2]
     steps:
     - name: Pull image from docker hub
       run:  docker pull rejoiz/patientsystembackend:latest
@@ -54,6 +59,23 @@ jobs:
       run:  docker rm -f patientsystembackend-container
     - name: Run docker container
       run:  docker run -d -p 5001:5001 --name patientsystembackend-container rejoiz/patientsystembackend:latest
+
+    # - name: Checkout code
+    #   uses: actions/checkout@v2
+
+    # - name: Set up SSH key for deployment
+    #   run: |
+    #     echo "${{ secrets.DEPLOY_KEY }}" > deploy_key
+    #     chmod 600 deploy_key
+    #     eval $(ssh-agent -s)
+    #     ssh-add deploy_key
+    #     mkdir -p ~/.ssh
+    #     ssh-keyscan github.com >> ~/.ssh/known_hosts
+
+    # - name: Deploy to production
+    #   run: ssh user@your-server "cd /path/to/your/app && git pull && pm2 restart all"
+    #   env:
+    #     DEPLOY_KEY: ${{ secrets.DEPLOY_KEY }}
 
     # - name: Checkout code
     #   uses: actions/checkout@v2
