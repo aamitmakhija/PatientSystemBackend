@@ -78,6 +78,7 @@ jobs:
         MONGODB_URI: ${{ secrets.MONGODB_URI }}
         JWT_SECRET: ${{ secrets.JWT_SECRET }}
       run: |
+        # Pull and run container
         sudo docker pull ${{ secrets.DOCKER_USERNAME }}/patientsystembackend:latest
         sudo docker stop patientsystembackend-container || true
         sudo docker rm patientsystembackend-container || true
@@ -90,6 +91,21 @@ jobs:
           --restart unless-stopped \
           ${{ secrets.DOCKER_USERNAME }}/patientsystembackend:latest
         
+        # Wait for application to start
+        echo "Waiting for application to start..."
+        sleep 15
+        
+        # Check health endpoint
+        echo "Checking health endpoint..."
+        response=$(curl -s http://localhost:5001/health)
+        if [ $? -eq 0 ]; then
+          echo "Health check successful:"
+          echo $response
+        else
+          echo "Health check failed"
+          sudo docker logs patientsystembackend-container
+          exit 1
+
     - name: Check Container Status
       run: |
         sleep 10
