@@ -88,8 +88,6 @@ Copy & paste generated token in enviorement (e.g {{token_admin}} {{token_clerk}}
 Contact
 
 For any queries or suggestions, feel free to contact:
-	•	Email: amit_makhija@outlook.com or steambeka@gmail.com or rejoizjs@gmail.com or zstepmoon@mail.ru or ahmedfayazyousuf@gmail.com
-
-
+	•	Email: amit_makhija@outlook.com 
 
 
